@@ -85,3 +85,32 @@ Lineage-specific adaptations suggest roles in host specificity and immune evasio
 Scalability
 
 Linux scripting + modular tools → workflow easily repurposable for other viral families.
+
+⚙️ Example Bash Workflow
+
+The following Bash script automates sequence extraction, redundancy reduction, and multiple sequence alignment for the Paramyxoviridae dataset:
+
+#!/bin/bash
+
+# Extract unique sequence IDs
+cat te | awk '{print $1}' | sort | uniq | sed '/^$/d' > te.ids
+
+# Fetch protein sequences using esl-sfetch
+esl-sfetch -f /home/ceglab/paramyxo.wf/prot.db/paramyxo.dataset.fa te.ids > te.fa
+
+# Cluster sequences with CD-HIT (no redundancy, c=1.0)
+cd-hit -i te.fa -o te.out -c 1.0 -n 5 -M 0 -T 0
+
+# Notes:
+# n=5 for thresholds 0.7 ~ 1.0
+# n=4 for thresholds 0.6 ~ 0.7
+# n=3 for thresholds 0.5 ~ 0.6
+# n=2 for thresholds 0.4 ~ 0.5
+
+# Generate multiple sequence alignment with MAFFT
+mafft --thread 6 --auto te.out | fasta2seqrows > res.seqrows
+
+# Clean up intermediate files
+rm te.ids te.fa te.out te.out.clstr
+
+This pipeline ensures that only non-redundant representative sequences are aligned, reducing computational load while preserving biological diversity.
