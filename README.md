@@ -85,20 +85,3 @@ Lineage-specific adaptations suggest roles in host specificity and immune evasio
 Scalability
 
 Linux scripting + modular tools → workflow easily repurposable for other viral families.
-
-⚙️ Bash Code
-
-#!/bin/bash
-
-cat te | awk '{print $1}' | sort | uniq | sed '/^$/d' > te.ids
-
-esl-sfetch -f /home/ceglab/paramyxo.wf/prot.db/paramyxo.dataset.fa te.ids > te.fa
-cd-hit -i te.fa -o te.out -c 1.0 -n 5 -M 0 -T 0
-
-#n=5 for thresholds 0.7 ~ 1.0
-#n=4 for thresholds 0.6 ~ 0.7
-#n=3 for thresholds 0.5 ~ 0.6
-#n=2 for thresholds 0.4 ~ 0.5
-
-mafft --thread 6 --auto te.out | fasta2seqrows > res.seqrows
-rm te.ids te.fa te.out te.out.clstr
