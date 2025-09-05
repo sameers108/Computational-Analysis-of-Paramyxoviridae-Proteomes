@@ -86,7 +86,7 @@ Scalability
 
 Linux scripting + modular tools → workflow easily repurposable for other viral families.
 
-⚙️ Bash Code :
+⚙️ Bash Code
 
 #!/bin/bash
 
